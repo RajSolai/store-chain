@@ -48,7 +48,7 @@ func sendDataRequest(url string, id string, data string) {
 
 func getPreviousBlock() string {
 	previousBlock := genesisBlockUrl
-	if getNextOfBlock(genesisBlockUrl) == "http://end:39149" {
+	if getNextOfBlock(genesisBlockUrl) == "end" {
 		previousBlock = getNextOfBlock(genesisBlockUrl)
 		return previousBlock
 	} else {
