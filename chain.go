@@ -34,7 +34,7 @@ func addMySelfToChain() {
 	requestObject["ip"] = GetOutboundIP()
 	requestJson, _ := json.Marshal(requestObject)
 	http.Post(previousBlock+"/updateNext", "application/json", strings.NewReader(string(requestJson)))
-	http.Get(previousBlock + "/next")
+	// http.Get(previousBlock + "/next")
 }
 
 func getPreviousBlock() string {
@@ -48,8 +48,8 @@ func getPreviousBlock() string {
 func getNextOfBlock(blockUrl string) string {
 	resp, err := http.Get(blockUrl + "/next")
 	fmt.Printf("err: %v\n", err)
-	resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
 	fmt.Printf("err: %v\n", err)
 	return string(body)
 }
@@ -57,8 +57,8 @@ func getNextOfBlock(blockUrl string) string {
 func getSizeOfBlock(blockUrl string) string {
 	resp, err := http.Get(blockUrl + "/size")
 	fmt.Printf("err: %v\n", err)
-	resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
 	fmt.Printf("err: %v\n", err)
 	return string(body)
 }
