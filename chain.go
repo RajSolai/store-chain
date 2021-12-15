@@ -101,6 +101,7 @@ func addData(w http.ResponseWriter, req *http.Request) {
 	var requestData map[string]string
 	json.NewDecoder(req.Body).Decode(&requestData)
 	if len(nodeData) < 10 {
+		println("Adding Via me:", nodeData["nodeId"])
 		nodeData[requestData["id"]] = requestData["data"]
 		return
 	}
