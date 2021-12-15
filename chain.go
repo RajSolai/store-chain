@@ -42,14 +42,16 @@ func sendDataRequest(url string, id string, data string) {
 	requestObject["id"] = id
 	requestObject["data"] = data
 	requestJson, _ := json.Marshal(requestObject)
-	http.Post(url+"/updateNext", "application/json", strings.NewReader(string(requestJson)))
+	http.Post(url+"/add", "application/json", strings.NewReader(string(requestJson)))
 	// http.Get(previousBlock + "/next")
 }
 
 func getPreviousBlock() string {
 	previousBlock := genesisBlockUrl
-	for !strings.Contains(getNextOfBlock(genesisBlockUrl), "end") {
+	if !strings.Contains(getNextOfBlock(genesisBlockUrl), "end") {
 		previousBlock = getNextOfBlock(genesisBlockUrl)
+	} else {
+		getPreviousBlock()
 	}
 	return previousBlock
 }
