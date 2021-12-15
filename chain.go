@@ -70,6 +70,9 @@ func getNextOfBlock(blockUrl string) string {
 	resp.Body.Close()
 	fmt.Printf("err: %v\n", err)
 	println("next of ", blockUrl, "is", string(body))
+	if string(body) == "end" {
+		return "end"
+	}
 	return "http://" + string(body) + ":39149"
 }
 
