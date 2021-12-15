@@ -48,16 +48,13 @@ func sendDataRequest(url string, id string, data string) {
 
 func getPreviousBlock() string {
 	previousBlock := genesisBlockUrl
-	for getNextOfBlock(genesisBlockUrl) != "end" {
+	for !strings.Contains(getNextOfBlock(genesisBlockUrl), "end") {
 		previousBlock = getNextOfBlock(genesisBlockUrl)
 	}
 	return previousBlock
 }
 
 func getNextOfBlock(blockUrl string) string {
-	if blockUrl == "end" {
-		return "end"
-	}
 	if !strings.Contains(blockUrl, "http://") {
 		blockUrl = "http://" + blockUrl
 	}
