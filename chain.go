@@ -84,7 +84,7 @@ func getSizeOfBlock(blockUrl string) string {
 }
 
 func searchForFreeNodes(url string) string {
-	if strings.Contains(url, "end") {
+	if url == "end" {
 		return url
 	}
 	println("size", getSizeOfBlock(url))
