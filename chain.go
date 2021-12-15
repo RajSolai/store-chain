@@ -125,7 +125,7 @@ func GetRandomId(length int) string {
 }
 
 func main() {
-	if len(os.Args) > 2 {
+	if len(os.Args) >= 2 {
 		genesisBlockUrl = os.Args[1:][0]
 		addMySelfToChain()
 	}
