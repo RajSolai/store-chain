@@ -90,11 +90,11 @@ func searchForFreeNodes(url string) string {
 	println("size", getSizeOfBlock(url))
 	println("url", url)
 	if strings.Compare(getSizeOfBlock(url), "10") != 0 {
+		println("adding via me,a block found")
 		return url
 	}
 	url = getNextOfBlock(url)
-	searchForFreeNodes(url)
-	return url
+	return searchForFreeNodes(url)
 }
 
 func addData(w http.ResponseWriter, req *http.Request) {
