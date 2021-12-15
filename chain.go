@@ -30,6 +30,7 @@ func GetOutboundIP() string {
 
 func addMySelfToChain() {
 	previousBlock := getPreviousBlock()
+	println("Previous block got", previousBlock)
 	requestObject := make(map[string]string)
 	requestObject["ip"] = GetOutboundIP()
 	requestJson, _ := json.Marshal(requestObject)
