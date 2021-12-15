@@ -37,6 +37,15 @@ func addMySelfToChain() {
 	// http.Get(previousBlock + "/next")
 }
 
+func sendDataRequest(url string, id string, data string) {
+	requestObject := make(map[string]string)
+	requestObject["id"] = id
+	requestObject["data"] = data
+	requestJson, _ := json.Marshal(requestObject)
+	http.Post(url+"/updateNext", "application/json", strings.NewReader(string(requestJson)))
+	// http.Get(previousBlock + "/next")
+}
+
 func getPreviousBlock() string {
 	previousBlock := genesisBlockUrl
 	for getNextOfBlock(genesisBlockUrl) != "end" {
@@ -46,12 +55,22 @@ func getPreviousBlock() string {
 }
 
 func getNextOfBlock(blockUrl string) string {
+	if blockUrl == "end" {
+		return "end"
+	}
+	if !strings.Contains(blockUrl, "http://") {
+		blockUrl = "http://" + blockUrl
+	}
+	if !strings.Contains(blockUrl, ":39149") {
+		blockUrl = blockUrl + ":39149"
+	}
 	resp, err := http.Get(blockUrl + "/next")
 	fmt.Printf("err: %v\n", err)
 	body, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	fmt.Printf("err: %v\n", err)
-	return string(body)
+	println("next of ", blockUrl, "is", string(body))
+	return "http://" + string(body) + ":39149"
 }
 
 func getSizeOfBlock(blockUrl string) string {
@@ -63,16 +82,18 @@ func getSizeOfBlock(blockUrl string) string {
 	return string(body)
 }
 
-func searchForFreeNodes(genesisUrl string) string {
-	freeNode := genesisUrl
-	for getNextOfBlock(genesisUrl) != "end" {
-		if getSizeOfBlock(genesisUrl) < "10" {
-			freeNode = genesisUrl
-		} else {
-			genesisUrl = getNextOfBlock(genesisUrl)
-		}
+func searchForFreeNodes(url string) string {
+	if strings.Contains(url, "end") {
+		return url
 	}
-	return freeNode
+	println("size", getSizeOfBlock(url))
+	println("url", url)
+	if strings.Compare(getSizeOfBlock(url), "10") != 0 {
+		return url
+	}
+	url = getNextOfBlock(url)
+	searchForFreeNodes(url)
+	return url
 }
 
 func addData(w http.ResponseWriter, req *http.Request) {
@@ -83,20 +104,20 @@ func addData(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	freeNode := searchForFreeNodes(genesisBlockUrl)
-	if genesisBlockUrl == "http://127.0.0.1:39149/" {
-		fmt.Fprint(w, "Cannot Add Values,No more nodes in Network")
-		return
-	}
+	// if freeNode == "http://127.0.0.1:39149/" {
+	// 	fmt.Fprint(w, "Cannot Add Values,No more nodes in Network")
+	// 	return
+	// }
 	// fmt.Fprint(w, freeNode)
 	fmt.Print(freeNode)
-	//TODO: make a post request to freeNode
+	sendDataRequest(freeNode, requestData["id"], requestData["data"])
 }
 
 func updateNext(w http.ResponseWriter, req *http.Request) {
 	var requestData map[string]string
 	json.NewDecoder(req.Body).Decode(&requestData)
 	nodeData["next"] = requestData["ip"]
-	fmt.Fprint(w, "Node Successfully added to Chain")
+	print("Node Successfully added to Chain")
 }
 
 func sayFileLimit(w http.ResponseWriter, req *http.Request) {
