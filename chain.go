@@ -29,7 +29,7 @@ func GetOutboundIP() string {
 }
 
 func addMySelfToChain() {
-	previousBlock := getPreviousBlock()
+	previousBlock := getPreviousBlock(genesisBlockUrl)
 	println("Previous block got", previousBlock)
 	requestObject := make(map[string]string)
 	requestObject["ip"] = GetOutboundIP()
@@ -47,15 +47,12 @@ func sendDataRequest(url string, id string, data string) {
 	// http.Get(previousBlock + "/next")
 }
 
-func getPreviousBlock() string {
-	previousBlock := genesisBlockUrl
+func getPreviousBlock(genesisBlockUrl string) string {
 	if getNextOfBlock(genesisBlockUrl) == "end" {
-		previousBlock = getNextOfBlock(genesisBlockUrl)
-		return previousBlock
-	} else {
-		getPreviousBlock()
+		return genesisBlockUrl
 	}
-	return previousBlock
+	nextBlock := getNextOfBlock(genesisBlockUrl)
+	return getPreviousBlock(nextBlock)
 }
 
 func getNextOfBlock(blockUrl string) string {
