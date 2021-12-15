@@ -50,6 +50,7 @@ func getPreviousBlock() string {
 	previousBlock := genesisBlockUrl
 	if !strings.Contains(getNextOfBlock(genesisBlockUrl), "end") {
 		previousBlock = getNextOfBlock(genesisBlockUrl)
+		return previousBlock
 	} else {
 		getPreviousBlock()
 	}
