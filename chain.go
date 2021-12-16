@@ -97,22 +97,22 @@ func searchForFreeNodes(url string) string {
 	return searchForFreeNodes(url)
 }
 
-func addData(w http.ResponseWriter, req *http.Request) {
-	var requestData map[string]string
-	json.NewDecoder(req.Body).Decode(&requestData)
-	if len(nodeData) < 10 {
-		println("Adding Via me:", nodeData["nodeId"])
-		nodeData[requestData["id"]] = requestData["data"]
+func updateAllNodes(url string, id string, data string) {
+	if url == "end" {
 		return
 	}
-	freeNode := searchForFreeNodes(genesisBlockUrl)
-	// if freeNode == "http://127.0.0.1:39149/" {
-	// 	fmt.Fprint(w, "Cannot Add Values,No more nodes in Network")
-	// 	return
-	// }
-	// fmt.Fprint(w, freeNode)
-	fmt.Print(freeNode)
-	sendDataRequest(freeNode, requestData["id"], requestData["data"])
+	println("am sending request")
+	sendDataRequest(url, id, data)
+	url = getNextOfBlock(url)
+	updateAllNodes(url, id, data)
+}
+
+func addData(w http.ResponseWriter, req *http.Request) {
+	println("Adding Data")
+	var requestData map[string]string
+	json.NewDecoder(req.Body).Decode(&requestData)
+	nodeData[requestData["id"]] = requestData["data"]
+	updateAllNodes(genesisBlockUrl, requestData["id"], requestData["data"])
 }
 
 func updateNext(w http.ResponseWriter, req *http.Request) {
