@@ -74,29 +74,6 @@ func getNextOfBlock(blockUrl string) string {
 	return "http://" + string(body) + ":39149"
 }
 
-func getSizeOfBlock(blockUrl string) string {
-	resp, err := http.Get(blockUrl + "/size")
-	fmt.Printf("err: %v\n", err)
-	body, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
-	fmt.Printf("err: %v\n", err)
-	return string(body)
-}
-
-func searchForFreeNodes(url string) string {
-	if url == "end" {
-		return url
-	}
-	println("size", getSizeOfBlock(url))
-	println("url", url)
-	if strings.Compare(getSizeOfBlock(url), "10") != 0 {
-		println("adding via me,a block found")
-		return url
-	}
-	url = getNextOfBlock(url)
-	return searchForFreeNodes(url)
-}
-
 func updateAllNodes(url string, id string, data string) {
 	if url == "end" {
 		return
