@@ -139,9 +139,14 @@ func sayNextBlock(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, nodeData["next"])
 }
 
-// func getData(w http.ResponseWriter, req *http.Request) {
-
-// }
+func getData(w http.ResponseWriter, req *http.Request) {
+	dataId := req.URL.Query().Get("id")
+	if len(nodeData[dataId]) != 0 {
+		fmt.Fprint(w, nodeData[dataId])
+	} else {
+		fmt.Fprint(w, "Deleted")
+	}
+}
 
 func GetRandomId(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyz" +
@@ -172,7 +177,7 @@ func main() {
 	http.HandleFunc("/size", sayFileLimit)
 	http.HandleFunc("/add", addData)
 	http.HandleFunc("/update", updateData)
-	// http.HandleFunc("/get", headers)
+	http.HandleFunc("/get", getData)
 	http.HandleFunc("/next", sayNextBlock)
 	http.HandleFunc("/updateNext", updateNext)
 
