@@ -43,7 +43,7 @@ func sendDataRequest(url string, id string, data string) {
 	requestObject["id"] = id
 	requestObject["data"] = data
 	requestJson, _ := json.Marshal(requestObject)
-	http.Post(url+"/add", "application/json", strings.NewReader(string(requestJson)))
+	http.Post(url+"/update", "application/json", strings.NewReader(string(requestJson)))
 	// http.Get(previousBlock + "/next")
 }
 
@@ -115,6 +115,14 @@ func addData(w http.ResponseWriter, req *http.Request) {
 	updateAllNodes(genesisBlockUrl, requestData["id"], requestData["data"])
 }
 
+func updateData(w http.ResponseWriter, req *http.Request) {
+	println("Updating Data")
+	fmt.Print("Am Updated !")
+	var requestData map[string]string
+	json.NewDecoder(req.Body).Decode(&requestData)
+	nodeData[requestData["id"]] = requestData["data"]
+}
+
 func updateNext(w http.ResponseWriter, req *http.Request) {
 	var requestData map[string]string
 	json.NewDecoder(req.Body).Decode(&requestData)
@@ -163,6 +171,7 @@ func main() {
 	// function handling
 	http.HandleFunc("/size", sayFileLimit)
 	http.HandleFunc("/add", addData)
+	http.HandleFunc("/update", updateData)
 	// http.HandleFunc("/get", headers)
 	http.HandleFunc("/next", sayNextBlock)
 	http.HandleFunc("/updateNext", updateNext)
